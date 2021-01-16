@@ -37,6 +37,7 @@ relationship OneToOne {
  */
 relationship OneToMany {
     Receipe to Ingredient
+    Ingredient to Receipe
 }
 /**
  * Many to many relationship.
