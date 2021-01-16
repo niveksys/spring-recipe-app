@@ -44,4 +44,5 @@ relationship OneToMany {
  */
 relationship ManyToMany {
     Receipe to Category
+    Category to Receipe
 }
