@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import com.niveksys.recipeapp.model.Category;
 import com.niveksys.recipeapp.model.Difficulty;
 import com.niveksys.recipeapp.model.Ingredient;
@@ -19,6 +21,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
     private final CategoryRepository categoryRepository;
@@ -33,7 +38,9 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
     }
 
     @Override
+    @Transactional
     public void onApplicationEvent(ContextRefreshedEvent arg0) {
+        log.debug("=> RecipeBootstrap.onApplicationEvent()");
         this.recipeRepository.saveAll(getRecipes());
     }
 
