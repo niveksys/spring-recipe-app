@@ -1,5 +1,6 @@
 package com.niveksys.recipeapp.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -29,11 +30,13 @@ public class Recipe {
     private Integer servings;
     private String source;
     private String url;
-    private String direction;
+
+    @Lob
+    private String directions;
     // private Difficulty difficulty;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
-    private Set<Ingredient> ingredients;
+    private Set<Ingredient> ingredients = new HashSet<>();
 
     @Lob
     private Byte[] image;
@@ -46,14 +49,14 @@ public class Recipe {
 
     @ManyToMany
     @JoinTable(name = "receipt_category", joinColumns = @JoinColumn(name = "recipe_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private Set<Category> categories;
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private Set<Category> categories = new HashSet<>();
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getDescription() {
@@ -104,12 +107,12 @@ public class Recipe {
         this.url = url;
     }
 
-    public String getDirection() {
-        return direction;
+    public String getDirections() {
+        return directions;
     }
 
-    public void setDirection(String direction) {
-        this.direction = direction;
+    public void setDirections(String directions) {
+        this.directions = directions;
     }
 
     public Byte[] getImage() {
