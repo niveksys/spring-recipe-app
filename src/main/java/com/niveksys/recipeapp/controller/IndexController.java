@@ -1,11 +1,5 @@
 package com.niveksys.recipeapp.controller;
 
-import java.util.Optional;
-
-import com.niveksys.recipeapp.model.Category;
-import com.niveksys.recipeapp.model.UnitOfMeasure;
-import com.niveksys.recipeapp.repository.CategoryRepository;
-import com.niveksys.recipeapp.repository.UnitOfMeasureRepository;
 import com.niveksys.recipeapp.service.RecipeService;
 
 import org.springframework.stereotype.Controller;
