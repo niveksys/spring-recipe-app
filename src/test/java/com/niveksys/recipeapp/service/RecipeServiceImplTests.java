@@ -13,20 +13,21 @@ import com.niveksys.recipeapp.repository.RecipeRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 public class RecipeServiceImplTests {
 
-    RecipeServiceImpl recipeService;
-
     @Mock
     RecipeRepository recipeRepository;
+
+    @InjectMocks
+    RecipeServiceImpl recipeService;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.recipeService = new RecipeServiceImpl(this.recipeRepository);
     }
 
     @Test
@@ -34,10 +35,12 @@ public class RecipeServiceImplTests {
         Recipe recipe = new Recipe();
         HashSet<Recipe> recipeData = new HashSet<Recipe>();
         recipeData.add(recipe);
+
         when(this.recipeRepository.findAll()).thenReturn(recipeData);
 
         Set<Recipe> recipes = this.recipeService.getRecipes();
         assertEquals(1, recipes.size());
+
         verify(this.recipeRepository, times(1)).findAll();
     }
 }
