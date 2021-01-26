@@ -5,7 +5,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
+import com.niveksys.recipeapp.model.Notes;
 import com.niveksys.recipeapp.model.Recipe;
 import com.niveksys.recipeapp.service.RecipeService;
 
@@ -33,9 +35,13 @@ public class RecipeControllerTest {
     public void getRecipe() throws Exception {
         Recipe recipe = new Recipe();
         recipe.setId(1L);
+        Notes notes = new Notes();
+        notes.setRecipeNotes("Notes");
+        recipe.setNotes(notes);
 
         when(this.recipeService.findById(anyLong())).thenReturn(recipe);
 
-        this.mockMvc.perform(get("/recipe/show/1")).andExpect(status().isOk()).andExpect(view().name("recipe/show"));
+        this.mockMvc.perform(get("/recipe/show/1")).andExpect(status().isOk()).andExpect(view().name("recipe/show"))
+                .andExpect(model().attributeExists("recipe"));
     }
 }
