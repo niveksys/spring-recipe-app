@@ -42,8 +42,8 @@ public class RecipeServiceImplTests {
 
         when(this.recipeRepository.findAll()).thenReturn(recipeSet);
 
-        Set<Recipe> recipeRresultSet = this.recipeService.getRecipes();
-        assertEquals(1, recipeRresultSet.size());
+        Set<Recipe> returnRecipeSet = this.recipeService.getRecipes();
+        assertEquals(1, returnRecipeSet.size());
 
         verify(this.recipeRepository, times(1)).findAll();
         verify(recipeRepository, never()).findById(anyLong());
