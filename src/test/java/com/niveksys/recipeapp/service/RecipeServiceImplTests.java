@@ -37,13 +37,13 @@ public class RecipeServiceImplTests {
     @Test
     public void getRecipes() throws Exception {
         Recipe recipe = new Recipe();
-        HashSet<Recipe> recipeData = new HashSet<Recipe>();
-        recipeData.add(recipe);
+        HashSet<Recipe> recipeSet = new HashSet<Recipe>();
+        recipeSet.add(recipe);
 
-        when(this.recipeRepository.findAll()).thenReturn(recipeData);
+        when(this.recipeRepository.findAll()).thenReturn(recipeSet);
 
-        Set<Recipe> recipes = this.recipeService.getRecipes();
-        assertEquals(1, recipes.size());
+        Set<Recipe> recipeRresultSet = this.recipeService.getRecipes();
+        assertEquals(1, recipeRresultSet.size());
 
         verify(this.recipeRepository, times(1)).findAll();
         verify(recipeRepository, never()).findById(anyLong());
