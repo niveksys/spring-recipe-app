@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import com.niveksys.recipeapp.converter.RecipeCommandToRecipe;
+import com.niveksys.recipeapp.converter.RecipeToRecipeCommand;
 import com.niveksys.recipeapp.model.Recipe;
 import com.niveksys.recipeapp.repository.RecipeRepository;
 
@@ -25,6 +27,12 @@ public class RecipeServiceImplTests {
 
     @Mock
     RecipeRepository recipeRepository;
+
+    @Mock
+    RecipeCommandToRecipe recipeCommandToRecipe;
+
+    @Mock
+    RecipeToRecipeCommand recipeToRecipeCommand;
 
     @InjectMocks
     RecipeServiceImpl recipeService;
