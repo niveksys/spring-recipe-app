@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
-@RequestMapping("/recipe")
+@RequestMapping("/recipes")
 public class RecipeController {
     private final RecipeService recipeService;
 
@@ -19,22 +22,39 @@ public class RecipeController {
         this.recipeService = recipeService;
     }
 
-    @RequestMapping("/show/{id}")
-    public String showById(@PathVariable String id, Model model) {
-        model.addAttribute("recipe", this.recipeService.findById(Long.parseLong(id)));
-        return "recipe/show";
+    @RequestMapping({ "", "/" })
+    public String list(Model model) {
+        log.debug("=> RecipeController.list()");
+        model.addAttribute("recipes", this.recipeService.getRecipes());
+        return "recipes/index";
     }
 
     @RequestMapping("/new")
     public String newRecipe(Model model) {
+        log.debug("=> RecipeController.newRecipe()");
         model.addAttribute("recipe", new RecipeCommand());
-        return "recipe/recipeform";
+        return "recipes/edit";
     }
 
-    @PostMapping("")
-    public String saveOrUpdate(@ModelAttribute RecipeCommand command) {
+    @PostMapping({ "", "/" })
+    public String createOrUpdate(@ModelAttribute RecipeCommand command) {
+        log.debug("=> RecipeController.createOrUpdate()");
         RecipeCommand savedCommand = this.recipeService.saveRecipeCommand(command);
-        return "redirect:/recipe/show/" + savedCommand.getId();
+        return "redirect:/recipes/" + savedCommand.getId();
+    }
+
+    @RequestMapping("/{id}")
+    public String show(@PathVariable String id, Model model) {
+        log.debug("=> RecipeController.show()");
+        model.addAttribute("recipe", this.recipeService.findById(Long.valueOf(id)));
+        return "recipes/show";
+    }
+
+    @RequestMapping("/{id}/edit")
+    public String edit(@PathVariable String id, Model model) {
+        log.debug("=> RecipeController.edit()");
+        model.addAttribute("recipe", this.recipeService.findCommandById(Long.valueOf(id)));
+        return "recipes/edit";
     }
 
 }

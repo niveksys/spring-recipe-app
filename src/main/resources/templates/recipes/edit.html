@@ -17,7 +17,7 @@
     <div class="container-fluid" style="margin-top: 20px">
       <div class="row justify-content-md-center">
         <div class="col-md-8">
-          <form th:object="${recipe}" th:action="@{/recipe/}" method="post">
+          <form th:object="${recipe}" th:action="@{/recipes/}" method="post">
             <input type="hidden" th:field="*{id}" />
             <div class="card border-primary" style="margin-bottom: 20px">
               <h5 class="card-header bg-primary bg-gradient text-light">
@@ -109,7 +109,10 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-12">
-                    <ul th:each="ingredient : ${recipe.ingredients}">
+                    <ul
+                      th:if="${not #lists.isEmpty(recipe.ingredients)}"
+                      th:each="ingredient : ${recipe.ingredients}"
+                    >
                       <li th:remove="all">1 Cup of milk</li>
                       <li th:remove="all">1 Teaspoon of chocolate</li>
                       <li
