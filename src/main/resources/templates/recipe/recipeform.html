@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- CSS only -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+      crossorigin="anonymous"
+      th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container-fluid" style="margin-top: 20px">
+      <div class="row justify-content-md-center">
+        <div class="col-md-8">
+          <form th:object="${recipe}" th:action="@{/recipe/}" method="post">
+            <input type="hidden" th:field="*{id}" />
+            <div class="card border-primary" style="margin-bottom: 20px">
+              <h5 class="card-header bg-primary bg-gradient text-light">
+                Edit Recipe Information
+              </h5>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label class="form-label">Recipe Descripton:</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      th:field="*{description}"
+                    />
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <label class="form-label">Categories:</label>
+                  </div>
+                  <div class="col-md-9">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" value="" />
+                      <label class="form-check-label"> Cat 1 </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <label class="form-label">Prep Time:</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      th:field="*{prepTime}"
+                    />
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Cooktime:</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      th:field="*{cookTime}"
+                    />
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Difficulty:</label>
+                    <select class="form-select">
+                      <option>Easy</option>
+                      <option>Medium</option>
+                      <option>Hard</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <label class="form-label">Servings:</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      th:field="*{servings}"
+                    />
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Source:</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      th:field="*{source}"
+                    />
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">URL:</label>
+                    <input type="text" class="form-control" th:field="*{url}" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card border-primary" style="margin-bottom: 20px">
+              <div class="card-header bg-primary bg-gradient text-light">
+                <div class="row">
+                  <h5 class="col-md-10">Ingredients</h5>
+                  <div class="col-md-2">
+                    <button href="#" class="btn btn-default">Edit</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <ul th:each="ingredient : ${recipe.ingredients}">
+                      <li th:remove="all">1 Cup of milk</li>
+                      <li th:remove="all">1 Teaspoon of chocolate</li>
+                      <li
+                        th:text="${(ingredient.amount + ' ' + ingredient.uom.description + ' - ' + ingredient.description)}"
+                      >
+                        1 Teaspoon of Sugar
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card border-primary" style="margin-bottom: 20px">
+              <h5 class="card-header bg-primary bg-gradient text-light">
+                Directions
+              </h5>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <textarea
+                      class="form-control"
+                      rows="3"
+                      th:field="*{directions}"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card border-primary" style="margin-bottom: 20px">
+              <h5 class="card-header bg-primary bg-gradient text-light">
+                Notes
+              </h5>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <textarea
+                      class="form-control"
+                      rows="3"
+                      th:field="*{notes.recipeNotes}"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- JavaScript Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+      crossorigin="anonymous"
+      th:src="@{/webjars/bootstrap/5.0.0-beta1/js/bootstrap.min.js}"
+    ></script>
+  </body>
+</html>

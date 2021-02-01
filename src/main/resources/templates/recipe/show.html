@@ -16,7 +16,7 @@
   <body>
     <div class="container-fluid" style="margin-top: 20px">
       <div class="row justify-content-md-center">
-        <div class="col-md-6">
+        <div class="col-md-8">
           <div class="card border-primary" style="margin-bottom: 20px">
             <h5
               class="card-header bg-primary bg-gradient text-light"
@@ -76,7 +76,7 @@
                   <h6>URL:</h6>
                 </div>
                 <div class="col-md-3">
-                  <p th:text="${recipe.url}">http://www.example.com</p>
+                  <a href="#" th:href="${recipe.url}">View Orginal</a>
                 </div>
               </div>
             </div>
