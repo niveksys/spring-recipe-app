@@ -46,29 +46,35 @@ public class RecipeServiceImplTests {
 
     @Test
     public void getRecipes() throws Exception {
+        // given
         Recipe recipe = new Recipe();
         HashSet<Recipe> recipeSet = new HashSet<Recipe>();
         recipeSet.add(recipe);
 
         when(this.recipeRepository.findAll()).thenReturn(recipeSet);
 
+        // when
         Set<Recipe> returnRecipeSet = this.recipeService.getRecipes();
-        assertEquals(1, returnRecipeSet.size());
 
+        // then
+        assertEquals(1, returnRecipeSet.size());
         verify(this.recipeRepository, times(1)).findAll();
         verify(recipeRepository, never()).findById(anyLong());
     }
 
     @Test
     public void findById() throws Exception {
+        // given
         Recipe recipe = new Recipe();
         recipe.setId(1L);
         Optional<Recipe> recipeOptional = Optional.of(recipe);
 
         when(this.recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
 
+        // when
         Recipe returnRecipe = this.recipeService.findById(1L);
 
+        // then
         assertNotNull(returnRecipe, "Null recipe returned");
         verify(this.recipeRepository, times(1)).findById(anyLong());
         verify(this.recipeRepository, never()).findAll();
@@ -76,6 +82,7 @@ public class RecipeServiceImplTests {
 
     @Test
     public void findCommandById() throws Exception {
+        // given
         Recipe recipe = new Recipe();
         recipe.setId(1L);
         Optional<Recipe> recipeOptional = Optional.of(recipe);
@@ -87,10 +94,25 @@ public class RecipeServiceImplTests {
 
         when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
 
+        // when
         RecipeCommand returnCommand = recipeService.findCommandById(1L);
 
+        // then
         assertNotNull(returnCommand, "Null recipe returned");
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeRepository, never()).findAll();
+    }
+
+    @Test
+    public void deleteById() throws Exception {
+        // given
+        Long id = Long.valueOf(2L);
+        // no 'when()', since method has void return type
+
+        // when
+        this.recipeService.deleteById(id);
+
+        // then
+        verify(this.recipeRepository, times(1)).deleteById(anyLong());
     }
 }

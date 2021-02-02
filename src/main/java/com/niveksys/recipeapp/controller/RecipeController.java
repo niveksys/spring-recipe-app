@@ -5,6 +5,7 @@ import com.niveksys.recipeapp.service.RecipeService;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,14 +23,14 @@ public class RecipeController {
         this.recipeService = recipeService;
     }
 
-    @RequestMapping({ "", "/" })
+    @GetMapping({ "", "/" })
     public String list(Model model) {
         log.debug("=> RecipeController.list()");
         model.addAttribute("recipes", this.recipeService.getRecipes());
         return "recipes/index";
     }
 
-    @RequestMapping("/new")
+    @GetMapping("/new")
     public String newRecipe(Model model) {
         log.debug("=> RecipeController.newRecipe()");
         model.addAttribute("recipe", new RecipeCommand());
@@ -43,18 +44,27 @@ public class RecipeController {
         return "redirect:/recipes/" + savedCommand.getId();
     }
 
-    @RequestMapping("/{id}")
+    @GetMapping("/{id}")
     public String show(@PathVariable String id, Model model) {
         log.debug("=> RecipeController.show()");
         model.addAttribute("recipe", this.recipeService.findById(Long.valueOf(id)));
         return "recipes/show";
     }
 
-    @RequestMapping("/{id}/edit")
+    @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model) {
         log.debug("=> RecipeController.edit()");
         model.addAttribute("recipe", this.recipeService.findCommandById(Long.valueOf(id)));
         return "recipes/edit";
+    }
+
+    @GetMapping("/{id}/delete")
+    public String delete(@PathVariable String id) {
+
+        log.debug("=> RecipeController.delete()");
+
+        this.recipeService.deleteById(Long.valueOf(id));
+        return "redirect:/recipes";
     }
 
 }

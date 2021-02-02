@@ -2,6 +2,8 @@ package com.niveksys.recipeapp.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -45,6 +47,7 @@ public class RecipeControllerTests {
 
     @Test
     public void getIndexPage() throws Exception {
+        // given
         Set<Recipe> recipes = new HashSet<>();
         Recipe recipe1 = new Recipe();
         recipe1.setId(1L);
@@ -53,8 +56,10 @@ public class RecipeControllerTests {
         recipe2.setId(2L);
         recipes.add(recipe2);
 
+        // when
         when(this.recipeService.getRecipes()).thenReturn(recipes);
 
+        // then
         mockMvc.perform(get("/recipes")).andExpect(status().isOk()).andExpect(view().name("recipes/index"))
                 .andExpect(model().attributeExists("recipes"));
     }
@@ -67,11 +72,14 @@ public class RecipeControllerTests {
 
     @Test
     public void createOrUpdate() throws Exception {
+        // given
         RecipeCommand command = new RecipeCommand();
         command.setId(2L);
 
+        // when
         when(recipeService.saveRecipeCommand(any())).thenReturn(command);
 
+        // then
         mockMvc.perform(post("/recipes").contentType(MediaType.APPLICATION_FORM_URLENCODED).param("id", "")
                 .param("description", "some string")).andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipes/2"));
@@ -79,26 +87,40 @@ public class RecipeControllerTests {
 
     @Test
     public void show() throws Exception {
+        // given
         Recipe recipe = new Recipe();
         recipe.setId(1L);
         Notes notes = new Notes();
         notes.setRecipeNotes("Notes");
         recipe.setNotes(notes);
 
+        // when
         when(this.recipeService.findById(anyLong())).thenReturn(recipe);
 
+        // then
         this.mockMvc.perform(get("/recipes/1")).andExpect(status().isOk()).andExpect(view().name("recipes/show"))
                 .andExpect(model().attributeExists("recipe"));
     }
 
     @Test
     public void edit() throws Exception {
+        // given
         RecipeCommand command = new RecipeCommand();
         command.setId(2L);
 
+        // when
         when(this.recipeService.findCommandById(anyLong())).thenReturn(command);
 
+        // then
         mockMvc.perform(get("/recipes/2/edit")).andExpect(status().isOk()).andExpect(view().name("recipes/edit"))
                 .andExpect(model().attributeExists("recipe"));
+    }
+
+    @Test
+    public void delete() throws Exception {
+        // when & then
+        mockMvc.perform(get("/recipes/1/delete")).andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/recipes"));
+        verify(recipeService, times(1)).deleteById(anyLong());
     }
 }
