@@ -46,7 +46,7 @@ public class RecipeControllerTests {
     }
 
     @Test
-    public void getIndexPage() throws Exception {
+    public void list() throws Exception {
         // given
         Set<Recipe> recipes = new HashSet<>();
         Recipe recipe1 = new Recipe();
@@ -60,7 +60,7 @@ public class RecipeControllerTests {
         when(this.recipeService.getRecipes()).thenReturn(recipes);
 
         // then
-        mockMvc.perform(get("/recipes")).andExpect(status().isOk()).andExpect(view().name("recipes/index"))
+        mockMvc.perform(get("/recipes")).andExpect(status().isOk()).andExpect(view().name("recipes/list"))
                 .andExpect(model().attributeExists("recipes"));
     }
 

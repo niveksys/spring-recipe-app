@@ -11,20 +11,20 @@
       crossorigin="anonymous"
       th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}"
     />
-    <title>Receip Home</title>
+    <title>Ingredients</title>
   </head>
   <body>
     <div class="container-fluid" style="margin-top: 20px">
       <div class="row justify-content-md-center">
-        <div class="col-md-6">
+        <div class="col-md-8">
           <div class="card border-primary">
             <h5 class="card-header bg-primary bg-gradient text-light">
-              My Recipes!
+              Ingredients
             </h5>
             <div class="card-body">
               <div
                 class="table-responsive"
-                th:if="${not #lists.isEmpty(recipes)}"
+                th:if="${not #lists.isEmpty(recipe.ingredients)}"
               >
                 <table class="table table-hover">
                   <thead class="table-light">
@@ -37,25 +37,31 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr th:each="recipe : ${recipes}">
-                      <td th:text="${recipe.id}">123</td>
-                      <td th:text="${recipe.description}">Tasty Goodness</td>
+                    <tr th:each="ingredient : ${recipe.ingredients}">
+                      <td th:text="${ingredient.id}">123</td>
+                      <td
+                        th:text="${ingredient.amount} + ' ' + ${ingredient.uom.description} + ' - ' + ${ingredient.description}"
+                      >
+                        Tasty Goodness
+                      </td>
                       <td>
-                        <a href="#" th:href="@{'/recipes/' + ${recipe.id}}"
+                        <a
+                          href="#"
+                          th:href="@{'/recipes/' + ${recipe.id} + '/ingredients/' + ${ingredient.id} + '/show'}"
                           >View</a
                         >
                       </td>
                       <td>
                         <a
                           href="#"
-                          th:href="@{'/recipes/' + ${recipe.id} + '/edit'}"
+                          th:href="@{'/recipes/' + ${recipe.id} + '/ingredients/' + ${ingredient.id} + '/edit'}"
                           >Update</a
                         >
                       </td>
                       <td>
                         <a
                           href="#"
-                          th:href="@{'/recipes/' + ${recipe.id} + '/delete'}"
+                          th:href="@{'/recipes/' + ${recipe.id} + '/ingredients/' + ${ingredient.id} + '/delete'}"
                           >Delete</a
                         >
                       </td>

@@ -27,7 +27,7 @@ public class RecipeController {
     public String list(Model model) {
         log.debug("=> RecipeController.list()");
         model.addAttribute("recipes", this.recipeService.getRecipes());
-        return "recipes/index";
+        return "recipes/list";
     }
 
     @GetMapping("/new")

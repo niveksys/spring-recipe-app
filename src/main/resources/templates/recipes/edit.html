@@ -99,9 +99,18 @@
             <div class="card border-primary" style="margin-bottom: 20px">
               <div class="card-header bg-primary bg-gradient text-light">
                 <div class="row">
-                  <h5 class="col-md-10">Ingredients</h5>
+                  <div class="col-md-10">
+                    <h5>Ingredients</h5>
+                  </div>
                   <div class="col-md-2">
-                    <button href="#" class="btn btn-default">Edit</button>
+                    <a
+                      class="btn btn-default"
+                      href="#"
+                      role="button"
+                      th:href="@{'/recipes/' + ${recipe.id} + '/ingredients'}"
+                    >
+                      View
+                    </a>
                   </div>
                 </div>
               </div>
@@ -116,7 +125,7 @@
                       <li th:remove="all">1 Cup of milk</li>
                       <li th:remove="all">1 Teaspoon of chocolate</li>
                       <li
-                        th:text="${(ingredient.amount + ' ' + ingredient.uom.description + ' - ' + ingredient.description)}"
+                        th:text="${ingredient.amount} + ' ' + ${ingredient.uom.description} + ' - ' + ${ingredient.description}"
                       >
                         1 Teaspoon of Sugar
                       </li>
