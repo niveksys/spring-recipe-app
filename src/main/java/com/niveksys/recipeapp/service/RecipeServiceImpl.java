@@ -19,8 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 public class RecipeServiceImpl implements RecipeService {
 
     private final RecipeRepository recipeRepository;
-    private RecipeCommandToRecipe recipeCommandToRecipe;
-    private RecipeToRecipeCommand recipeToRecipeCommand;
+    private final RecipeCommandToRecipe recipeCommandToRecipe;
+    private final RecipeToRecipeCommand recipeToRecipeCommand;
 
     public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeCommandToRecipe recipeCommandToRecipe,
             RecipeToRecipeCommand recipeToRecipeCommand) {
@@ -31,7 +31,6 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Set<Recipe> getRecipes() {
-        log.debug("=> RecipeServiceImpl.getReceipes()");
         Set<Recipe> recipeSet = new HashSet<>();
         recipeRepository.findAll().forEach(recipeSet::add);
         return recipeSet;

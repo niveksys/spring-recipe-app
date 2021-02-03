@@ -12,7 +12,7 @@ public class IndexController {
 
     @RequestMapping({ "", "/", "/index" })
     public String getIndexPage(Model model) {
-        log.debug("=> IndexController.getIndexPage()");
+        log.debug("Redirect to LIST recipes.");
         return "redirect:/recipes";
     }
 

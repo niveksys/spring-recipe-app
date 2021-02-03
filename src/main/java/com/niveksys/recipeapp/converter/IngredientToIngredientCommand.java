@@ -8,7 +8,9 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import lombok.Synchronized;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class IngredientToIngredientCommand implements Converter<Ingredient, IngredientCommand> {
 
@@ -22,12 +24,16 @@ public class IngredientToIngredientCommand implements Converter<Ingredient, Ingr
     @Nullable
     @Override
     public IngredientCommand convert(Ingredient source) {
+        log.debug("CONVERT: " + source);
         if (source == null) {
             return null;
         }
 
         IngredientCommand command = new IngredientCommand();
         command.setId(source.getId());
+        if (source.getRecipe() != null) {
+            command.setRecipeId(source.getRecipe().getId());
+        }
         command.setAmount(source.getAmount());
         command.setDescription(source.getDescription());
         command.setUom(this.uomConverter.convert(source.getUom()));

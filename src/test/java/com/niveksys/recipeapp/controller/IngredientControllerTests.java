@@ -9,7 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import com.niveksys.recipeapp.command.IngredientCommand;
 import com.niveksys.recipeapp.command.RecipeCommand;
+import com.niveksys.recipeapp.command.UnitOfMeasureCommand;
+import com.niveksys.recipeapp.service.IngredientService;
 import com.niveksys.recipeapp.service.RecipeService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +27,9 @@ public class IngredientControllerTests {
 
     @MockBean
     RecipeService recipeService;
+
+    @MockBean
+    IngredientService ingredientService;
 
     @Autowired
     MockMvc mockMvc;
@@ -45,5 +51,21 @@ public class IngredientControllerTests {
 
         // then
         verify(this.recipeService, times(1)).findCommandById(anyLong());
+    }
+
+    @Test
+    public void show() throws Exception {
+        // given
+        IngredientCommand command = new IngredientCommand();
+        UnitOfMeasureCommand uomCommand = new UnitOfMeasureCommand();
+        command.setUom(uomCommand);
+        when(this.ingredientService.findByRecipeIdAndIngredientId(anyLong(), anyLong())).thenReturn(command);
+
+        // when
+        this.mockMvc.perform(get("/recipes/1/ingredients/2/show")).andExpect(status().isOk())
+                .andExpect(view().name("recipes/ingredients/show")).andExpect(model().attributeExists("ingredient"));
+
+        // then
+        verify(this.ingredientService, times(1)).findByRecipeIdAndIngredientId(anyLong(), anyLong());
     }
 }
