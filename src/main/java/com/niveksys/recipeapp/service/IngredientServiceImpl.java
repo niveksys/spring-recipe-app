@@ -1,15 +1,14 @@
 package com.niveksys.recipeapp.service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.niveksys.recipeapp.command.IngredientCommand;
+import com.niveksys.recipeapp.converter.IngredientCommandToIngredient;
 import com.niveksys.recipeapp.converter.IngredientToIngredientCommand;
 import com.niveksys.recipeapp.model.Ingredient;
 import com.niveksys.recipeapp.model.Recipe;
 import com.niveksys.recipeapp.repository.RecipeRepository;
+import com.niveksys.recipeapp.repository.UnitOfMeasureRepository;
 
 import org.springframework.stereotype.Service;
 
@@ -20,12 +19,17 @@ import lombok.extern.slf4j.Slf4j;
 public class IngredientServiceImpl implements IngredientService {
 
     private final RecipeRepository recipeRepository;
+    private final UnitOfMeasureRepository unitOfMeasureRepository;
     private final IngredientToIngredientCommand ingredientToIngredientCommand;
+    private final IngredientCommandToIngredient ingredientCommandToIngredient;
 
-    public IngredientServiceImpl(RecipeRepository recipeRepository,
-            IngredientToIngredientCommand ingredientToIngredientCommand) {
+    public IngredientServiceImpl(RecipeRepository recipeRepository, UnitOfMeasureRepository unitOfMeasureRepository,
+            IngredientToIngredientCommand ingredientToIngredientCommand,
+            IngredientCommandToIngredient ingredientCommandToIngredient) {
         this.recipeRepository = recipeRepository;
+        this.unitOfMeasureRepository = unitOfMeasureRepository;
         this.ingredientToIngredientCommand = ingredientToIngredientCommand;
+        this.ingredientCommandToIngredient = ingredientCommandToIngredient;
     }
 
     @Override
@@ -45,6 +49,37 @@ public class IngredientServiceImpl implements IngredientService {
             log.error("Ingredient not found with ID: " + ingredientId);
         }
         return commandOptional.get();
+    }
+
+    @Override
+    public IngredientCommand saveIngredientCommand(IngredientCommand command) {
+        Optional<Recipe> recipeOptional = recipeRepository.findById(command.getRecipeId());
+
+        if (!recipeOptional.isPresent()) {
+            log.error("Recipe not found with ID: " + command.getRecipeId());
+            return new IngredientCommand();
+        } else {
+            Recipe recipe = recipeOptional.get();
+
+            Optional<Ingredient> ingredientOptional = recipe.getIngredients().stream()
+                    .filter(ingredient -> ingredient.getId().equals(command.getId())).findFirst();
+
+            if (ingredientOptional.isPresent()) {
+                Ingredient ingredient = ingredientOptional.get();
+                ingredient.setDescription(command.getDescription());
+                ingredient.setAmount(command.getAmount());
+                ingredient.setUom(unitOfMeasureRepository.findById(command.getUom().getId())
+                        .orElseThrow(() -> new RuntimeException("UOM not found.")));
+            } else {
+                // add new Ingredient
+                recipe.addIngredient(ingredientCommandToIngredient.convert(command));
+            }
+
+            Recipe savedRecipe = recipeRepository.save(recipe);
+
+            return ingredientToIngredientCommand.convert(savedRecipe.getIngredients().stream()
+                    .filter(recipeIngredients -> recipeIngredients.getId().equals(command.getId())).findFirst().get());
+        }
     }
 
 }
