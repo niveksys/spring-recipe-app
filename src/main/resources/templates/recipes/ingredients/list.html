@@ -18,9 +18,23 @@
       <div class="row justify-content-md-center">
         <div class="col-md-8">
           <div class="card border-primary">
-            <h5 class="card-header bg-primary bg-gradient text-light">
-              Ingredients
-            </h5>
+            <div class="card-header bg-primary bg-gradient text-light">
+              <div class="row">
+                <div class="col-md-10">
+                  <h5>Ingredients</h5>
+                </div>
+                <div class="col-md-2">
+                  <a
+                    class="btn btn-default"
+                    href="#"
+                    role="button"
+                    th:href="@{'/recipes/' + ${recipe.id} + '/ingredients/new'}"
+                  >
+                    New
+                  </a>
+                </div>
+              </div>
+            </div>
             <div class="card-body">
               <div
                 class="table-responsive"

@@ -1,6 +1,8 @@
 package com.niveksys.recipeapp.controller;
 
 import com.niveksys.recipeapp.command.IngredientCommand;
+import com.niveksys.recipeapp.command.RecipeCommand;
+import com.niveksys.recipeapp.command.UnitOfMeasureCommand;
 import com.niveksys.recipeapp.service.IngredientService;
 import com.niveksys.recipeapp.service.RecipeService;
 import com.niveksys.recipeapp.service.UnitOfMeasureService;
@@ -36,10 +38,25 @@ public class IngredientController {
         return "recipes/ingredients/list";
     }
 
+    @GetMapping("/recipes/{recipeId}/ingredients/new")
+    public String newIngredient(@PathVariable String recipeId, Model model) {
+        log.debug("NEW ingredient form.");
+
+        RecipeCommand recipeCommand = this.recipeService.findCommandById(Long.valueOf(recipeId));
+
+        IngredientCommand ingredientCommand = new IngredientCommand();
+        ingredientCommand.setRecipeId(recipeCommand.getId());
+        ingredientCommand.setUom(new UnitOfMeasureCommand());
+
+        model.addAttribute("ingredient", ingredientCommand);
+        model.addAttribute("uoms", this.unitOfMeasureService.getUomCommands());
+        return "recipes/ingredients/edit";
+    }
+
     @PostMapping("recipes/{recipeId}/ingredients")
     public String createOrUpdate(@ModelAttribute IngredientCommand command) {
         log.debug("CREATE a new ingredient, or UPDATE a specific ingredient, then redirect to SHOW.");
-        IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command);
+        IngredientCommand savedCommand = this.ingredientService.saveIngredientCommand(command);
 
         log.debug("Saved Receipe ID:" + savedCommand.getRecipeId());
         log.debug("Saved Ingredient ID:" + savedCommand.getId());
@@ -51,7 +68,7 @@ public class IngredientController {
     public String show(@PathVariable String recipeId, @PathVariable String id, Model model) {
         log.debug("SHOW info about a specific recipe.");
         model.addAttribute("ingredient",
-                ingredientService.findByRecipeIdAndIngredientId(Long.valueOf(recipeId), Long.valueOf(id)));
+                this.ingredientService.findByRecipeIdAndIngredientId(Long.valueOf(recipeId), Long.valueOf(id)));
         return "recipes/ingredients/show";
     }
 
@@ -59,8 +76,8 @@ public class IngredientController {
     public String updateRecipeIngredient(@PathVariable String recipeId, @PathVariable String id, Model model) {
         log.debug("EDIT form for a specific ingredient.");
         model.addAttribute("ingredient",
-                ingredientService.findByRecipeIdAndIngredientId(Long.valueOf(recipeId), Long.valueOf(id)));
-        model.addAttribute("uoms", unitOfMeasureService.getUomCommands());
+                this.ingredientService.findByRecipeIdAndIngredientId(Long.valueOf(recipeId), Long.valueOf(id)));
+        model.addAttribute("uoms", this.unitOfMeasureService.getUomCommands());
         return "recipes/ingredients/edit";
     }
 }
