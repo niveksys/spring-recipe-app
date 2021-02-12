@@ -106,4 +106,25 @@ public class IngredientServiceImplTests {
         verify(this.recipeRepository, times(1)).findById(anyLong());
         verify(this.recipeRepository, times(1)).save(any(Recipe.class));
     }
+
+    @Test
+    public void deleteById() throws Exception {
+        // given
+        Recipe recipe = new Recipe();
+        Ingredient ingredient = new Ingredient();
+        ingredient.setId(3L);
+        ingredient.setRecipe(recipe);
+        recipe.addIngredient(ingredient);
+
+        Optional<Recipe> recipeOptional = Optional.of(recipe);
+
+        when(this.recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+        // when
+        this.ingredientService.deleteById(1L, 3L);
+
+        // then
+        verify(this.recipeRepository, times(1)).findById(anyLong());
+        verify(this.recipeRepository, times(1)).save(any(Recipe.class));
+    }
 }

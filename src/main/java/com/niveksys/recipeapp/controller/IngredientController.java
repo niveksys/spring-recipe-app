@@ -53,7 +53,7 @@ public class IngredientController {
         return "recipes/ingredients/edit";
     }
 
-    @PostMapping("recipes/{recipeId}/ingredients")
+    @PostMapping("/recipes/{recipeId}/ingredients")
     public String createOrUpdate(@ModelAttribute IngredientCommand command) {
         log.debug("CREATE a new ingredient, or UPDATE a specific ingredient, then redirect to SHOW.");
         IngredientCommand savedCommand = this.ingredientService.saveIngredientCommand(command);
@@ -64,7 +64,7 @@ public class IngredientController {
         return "redirect:/recipes/" + savedCommand.getRecipeId() + "/ingredients/" + savedCommand.getId();
     }
 
-    @GetMapping("recipes/{recipeId}/ingredients/{id}")
+    @GetMapping("/recipes/{recipeId}/ingredients/{id}")
     public String show(@PathVariable String recipeId, @PathVariable String id, Model model) {
         log.debug("SHOW info about a specific recipe.");
         model.addAttribute("ingredient",
@@ -72,12 +72,19 @@ public class IngredientController {
         return "recipes/ingredients/show";
     }
 
-    @GetMapping("recipes/{recipeId}/ingredients/{id}/edit")
-    public String updateRecipeIngredient(@PathVariable String recipeId, @PathVariable String id, Model model) {
+    @GetMapping("/recipes/{recipeId}/ingredients/{id}/edit")
+    public String edit(@PathVariable String recipeId, @PathVariable String id, Model model) {
         log.debug("EDIT form for a specific ingredient.");
         model.addAttribute("ingredient",
                 this.ingredientService.findByRecipeIdAndIngredientId(Long.valueOf(recipeId), Long.valueOf(id)));
         model.addAttribute("uoms", this.unitOfMeasureService.getUomCommands());
         return "recipes/ingredients/edit";
+    }
+
+    @GetMapping("/recipes/{recipeId}/ingredients/{id}/delete")
+    public String delete(@PathVariable String recipeId, @PathVariable String id) {
+        log.debug("DELETE a specific ingredient, then redirect to LIST.");
+        this.ingredientService.deleteById(Long.valueOf(recipeId), Long.valueOf(id));
+        return "redirect:/recipes/" + recipeId + "/ingredients";
     }
 }
