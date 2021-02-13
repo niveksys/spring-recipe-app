@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.niveksys.recipeapp.command.RecipeCommand;
+import com.niveksys.recipeapp.exception.NotFoundException;
 import com.niveksys.recipeapp.model.Notes;
 import com.niveksys.recipeapp.model.Recipe;
 import com.niveksys.recipeapp.service.RecipeService;
@@ -100,6 +101,15 @@ public class RecipeControllerTests {
         // then
         this.mockMvc.perform(get("/recipes/1")).andExpect(status().isOk()).andExpect(view().name("recipes/show"))
                 .andExpect(model().attributeExists("recipe"));
+    }
+
+    @Test
+    public void showNotFound() throws Exception {
+        // given
+        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+
+        // when
+        mockMvc.perform(get("/recipe/1")).andExpect(status().isNotFound());
     }
 
     @Test

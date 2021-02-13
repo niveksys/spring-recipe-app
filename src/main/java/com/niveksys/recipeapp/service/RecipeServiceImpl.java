@@ -7,6 +7,7 @@ import java.util.Set;
 import com.niveksys.recipeapp.command.RecipeCommand;
 import com.niveksys.recipeapp.converter.RecipeCommandToRecipe;
 import com.niveksys.recipeapp.converter.RecipeToRecipeCommand;
+import com.niveksys.recipeapp.exception.NotFoundException;
 import com.niveksys.recipeapp.model.Recipe;
 import com.niveksys.recipeapp.repository.RecipeRepository;
 
@@ -41,7 +42,7 @@ public class RecipeServiceImpl implements RecipeService {
         Optional<Recipe> recipeOptional = this.recipeRepository.findById(id);
 
         if (!recipeOptional.isPresent()) {
-            throw new RuntimeException("Recipe Not Found");
+            throw new NotFoundException("Recipe Not Found.");
         }
 
         return recipeOptional.get();

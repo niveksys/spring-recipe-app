@@ -2,6 +2,7 @@ package com.niveksys.recipeapp.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
@@ -16,6 +17,7 @@ import java.util.Set;
 import com.niveksys.recipeapp.command.RecipeCommand;
 import com.niveksys.recipeapp.converter.RecipeCommandToRecipe;
 import com.niveksys.recipeapp.converter.RecipeToRecipeCommand;
+import com.niveksys.recipeapp.exception.NotFoundException;
 import com.niveksys.recipeapp.model.Recipe;
 import com.niveksys.recipeapp.repository.RecipeRepository;
 
@@ -79,6 +81,21 @@ public class RecipeServiceImplTests {
         assertNotNull(returnRecipe, "Null recipe returned");
         verify(this.recipeRepository, times(1)).findById(anyLong());
         verify(this.recipeRepository, never()).findAll();
+    }
+
+    @Test
+    public void findByIdNotFound() throws Exception {
+        // given
+        Optional<Recipe> recipeOptional = Optional.empty();
+
+        when(this.recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+        // when
+        Throwable exception = assertThrows(NotFoundException.class, () -> {
+            Recipe returnRecipe = recipeService.findById(1L);
+            assertNotNull(returnRecipe, "Null recipe returned");
+        });
+        assertNotNull(exception.getMessage(), "Exception message should not be Null.");
     }
 
     @Test
