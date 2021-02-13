@@ -59,7 +59,7 @@ public class ImageControllerTests {
     public void createOrUpdate() throws Exception {
         // given
         MockMultipartFile multipartFile = new MockMultipartFile("imageFile", "testing.txt", "text/plain",
-                "Fake Image Byte Stream".getBytes());
+                "Mock Image Byte Stream".getBytes());
 
         // when
         mockMvc.perform(multipart("/recipes/1/image").file(multipartFile)).andExpect(status().is3xxRedirection())

@@ -36,7 +36,7 @@ public class IngredientServiceImplTests {
 
     IngredientToIngredientCommand ingredientToIngredientCommand;
     IngredientCommandToIngredient ingredientCommandToIngredient;
-    IngredientServiceImpl ingredientService;
+    IngredientService ingredientService;
 
     public IngredientServiceImplTests() {
         this.ingredientToIngredientCommand = new IngredientToIngredientCommand(
