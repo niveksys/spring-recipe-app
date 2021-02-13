@@ -45,7 +45,6 @@ public class IngredientControllerTests {
 
     @BeforeEach
     public void setUp() {
-
     }
 
     @Test
