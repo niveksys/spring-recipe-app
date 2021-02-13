@@ -1,8 +1,16 @@
 package com.niveksys.recipeapp.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.servlet.http.HttpServletResponse;
+
+import com.niveksys.recipeapp.command.RecipeCommand;
 import com.niveksys.recipeapp.service.ImageService;
 import com.niveksys.recipeapp.service.RecipeService;
 
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +45,23 @@ public class ImageController {
         log.debug("CREATE a new image, or UPDATE a specific image, then redirect to SHOW.");
         this.imageService.saveImageFile(Long.valueOf(id), file);
         return "redirect:/recipes/" + id;
+    }
+
+    @GetMapping("/recipes/{id}/image")
+    public void show(@PathVariable String id, HttpServletResponse response) throws IOException {
+        RecipeCommand command = this.recipeService.findCommandById(Long.valueOf(id));
+
+        if (command.getImage() != null) {
+            byte[] bytes = new byte[command.getImage().length];
+            int i = 0;
+            for (Byte b : command.getImage()) {
+                bytes[i++] = b;
+            }
+
+            response.setContentType("image/jpeg");
+            InputStream is = new ByteArrayInputStream(bytes);
+            IOUtils.copy(is, response.getOutputStream());
+        }
     }
 
 }

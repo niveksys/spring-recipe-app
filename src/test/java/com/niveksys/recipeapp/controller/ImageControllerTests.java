@@ -1,5 +1,6 @@
 package com.niveksys.recipeapp.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -47,11 +49,11 @@ public class ImageControllerTests {
         when(recipeService.findCommandById(anyLong())).thenReturn(command);
 
         // when
-        mockMvc.perform(get("/recipes/1/image/new")).andExpect(status().isOk())
+        this.mockMvc.perform(get("/recipes/1/image/new")).andExpect(status().isOk())
                 .andExpect(model().attributeExists("recipe"));
 
         // then
-        verify(recipeService, times(1)).findCommandById(anyLong());
+        verify(this.recipeService, times(1)).findCommandById(anyLong());
 
     }
 
@@ -62,10 +64,36 @@ public class ImageControllerTests {
                 "Mock Image Byte Stream".getBytes());
 
         // when
-        mockMvc.perform(multipart("/recipes/1/image").file(multipartFile)).andExpect(status().is3xxRedirection())
+        this.mockMvc.perform(multipart("/recipes/1/image").file(multipartFile)).andExpect(status().is3xxRedirection())
                 .andExpect(header().string("Location", "/recipes/1"));
 
         // then
-        verify(imageService, times(1)).saveImageFile(anyLong(), any());
+        verify(this.imageService, times(1)).saveImageFile(anyLong(), any());
+    }
+
+    @Test
+    public void show() throws Exception {
+        // given
+        RecipeCommand command = new RecipeCommand();
+        command.setId(1L);
+
+        String s = "Mock Image Byte Stream";
+        Byte[] bytes = new Byte[s.getBytes().length];
+
+        int i = 0;
+        for (byte b : s.getBytes()) {
+            bytes[i++] = b;
+        }
+        command.setImage(bytes);
+
+        when(this.recipeService.findCommandById(anyLong())).thenReturn(command);
+
+        // when
+        MockHttpServletResponse response = this.mockMvc.perform(get("/recipes/1/image")).andExpect(status().isOk())
+                .andReturn().getResponse();
+
+        // then
+        byte[] reponseBytes = response.getContentAsByteArray();
+        assertEquals(s.getBytes().length, reponseBytes.length);
     }
 }

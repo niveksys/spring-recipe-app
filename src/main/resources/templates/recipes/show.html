@@ -52,7 +52,7 @@
                 <div class="col-md-6">
                   <img
                     src=""
-                    th:src="@{/images/placeholder.jpg}"
+                    th:src="@{'/recipes/' + ${recipe.id} + '/image'}"
                     width="200"
                     height="200"
                   />
