@@ -64,7 +64,16 @@
                   </div>
                   <div class="col-md-3">
                     <label class="form-label">Difficulty:</label>
-                    <select class="form-select">
+                    <select class="form-select" th:field="*{difficulty}">
+                      <option
+                        th:each="difficultyValue : ${T(com.niveksys.recipeapp.model.Difficulty).values()}"
+                        th:value="${difficultyValue.name()}"
+                        th:text="${difficultyValue.name()}"
+                      >
+                        option
+                      </option>
+                    </select>
+                    <select class="form-select" th:remove="all">
                       <option>Easy</option>
                       <option>Medium</option>
                       <option>Hard</option>
