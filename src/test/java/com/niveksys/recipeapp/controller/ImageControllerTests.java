@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.niveksys.recipeapp.command.RecipeCommand;
 import com.niveksys.recipeapp.service.ImageService;
@@ -95,5 +96,12 @@ public class ImageControllerTests {
         // then
         byte[] reponseBytes = response.getContentAsByteArray();
         assertEquals(s.getBytes().length, reponseBytes.length);
+    }
+
+    @Test
+    public void showNumberFormatException() throws Exception {
+        // when
+        mockMvc.perform(get("/recipes/asdf/image")).andExpect(status().isBadRequest())
+                .andExpect(view().name("400error"));
     }
 }

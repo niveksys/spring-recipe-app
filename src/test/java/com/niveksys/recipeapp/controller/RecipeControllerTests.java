@@ -43,7 +43,6 @@ public class RecipeControllerTests {
 
     @BeforeEach
     public void setUp() {
-
     }
 
     @Test
