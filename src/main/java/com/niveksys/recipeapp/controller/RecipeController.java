@@ -1,15 +1,20 @@
 package com.niveksys.recipeapp.controller;
 
 import com.niveksys.recipeapp.command.RecipeCommand;
+import com.niveksys.recipeapp.exception.NotFoundException;
 import com.niveksys.recipeapp.service.RecipeService;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,4 +70,10 @@ public class RecipeController {
         return "redirect:/recipes";
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleNotFoundException() {
+        log.error("Handling Not Found Exception.");
+        return "404error";
+    }
 }
