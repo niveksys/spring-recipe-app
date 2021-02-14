@@ -70,10 +70,13 @@ public class RecipeController {
         return "redirect:/recipes";
     }
 
-    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleNotFoundException() {
-        log.error("Handling Not Found Exception.");
-        return "404error";
+    @ExceptionHandler(NotFoundException.class)
+    public ModelAndView handleNotFoundException(NotFoundException ex) {
+        log.error("Handling Not Found Exception: " + ex.getMessage());
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("exception", ex);
+        mav.setViewName("404error");
+        return mav;
     }
 }

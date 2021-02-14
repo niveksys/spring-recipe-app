@@ -16,7 +16,10 @@
   <body>
     <div class="container-fluid" style="margin-top: 20px">
       <div class="row justify-content-md-center">
-        <h1>404 Not Found</h1>
+        <div class="col-md-8">
+          <h1>404 Not Found</h1>
+          <p th:text="${exception.getMessage()}"></p>
+        </div>
       </div>
     </div>
 
