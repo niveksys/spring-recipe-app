@@ -1,5 +1,7 @@
 package com.niveksys.recipeapp.controller;
 
+import javax.validation.Valid;
+
 import com.niveksys.recipeapp.command.RecipeCommand;
 import com.niveksys.recipeapp.exception.NotFoundException;
 import com.niveksys.recipeapp.service.RecipeService;
@@ -7,6 +9,7 @@ import com.niveksys.recipeapp.service.RecipeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,6 +25,9 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/recipes")
 public class RecipeController {
+
+    private static final String RECIPE_CREATE_OR_UPDATE_VIEW = "recipes/edit";
+
     private final RecipeService recipeService;
 
     public RecipeController(RecipeService recipeService) {
@@ -39,12 +45,18 @@ public class RecipeController {
     public String newRecipe(Model model) {
         log.debug("NEW recipe form.");
         model.addAttribute("recipe", new RecipeCommand());
-        return "recipes/edit";
+        return RECIPE_CREATE_OR_UPDATE_VIEW;
     }
 
     @PostMapping({ "", "/" })
-    public String createOrUpdate(@ModelAttribute RecipeCommand command) {
+    public String createOrUpdate(@Valid @ModelAttribute("recipe") RecipeCommand command, BindingResult bindingResult) {
         log.debug("CREATE a new recipe, or UPDATE a specific recipe, then redirect to SHOW.");
+        if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(error -> {
+                log.debug(error.toString());
+            });
+            return RECIPE_CREATE_OR_UPDATE_VIEW;
+        }
         RecipeCommand savedCommand = this.recipeService.saveRecipeCommand(command);
         return "redirect:/recipes/" + savedCommand.getId();
     }
@@ -60,7 +72,7 @@ public class RecipeController {
     public String edit(@PathVariable String id, Model model) {
         log.debug("EDIT form for a specific recipe.");
         model.addAttribute("recipe", this.recipeService.findCommandById(Long.valueOf(id)));
-        return "recipes/edit";
+        return RECIPE_CREATE_OR_UPDATE_VIEW;
     }
 
     @GetMapping("/{id}/delete")
