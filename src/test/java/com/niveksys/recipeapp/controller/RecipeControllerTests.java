@@ -95,8 +95,8 @@ public class RecipeControllerTests {
         when(recipeService.saveRecipeCommand(any())).thenReturn(command);
 
         // then
-        mockMvc.perform(post("/recipes").contentType(MediaType.APPLICATION_FORM_URLENCODED).param("id", ""))
-                .andExpect(status().isOk()).andExpect(model().attributeExists("recipe"))
+        mockMvc.perform(post("/recipes").contentType(MediaType.APPLICATION_FORM_URLENCODED).param("id", "")
+                .param("cookTime", "3000")).andExpect(status().isOk()).andExpect(model().attributeExists("recipe"))
                 .andExpect(view().name("recipes/edit"));
     }
 
